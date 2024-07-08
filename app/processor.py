@@ -13,16 +13,20 @@ def get_start_process_thread(reports: list, dev_mode: bool, ift_mode: bool) -> T
 def start_process(reports: list, dev_mode: bool, ift_mode: bool):
     global ms, pg_dev, pg_ift
     try:
+        logging.info("================= START PROCESSING =================")
         # Создание объектов для БД
         ms = MsSqlDao('datasource.in.mssql')
         pg_dev = PostgresDao('datasource.out.postgres.dev')
         pg_ift = PostgresDao('datasource.out.postgres.ift')
 
         # Подключение к БД
+        logging.info('Connecting to MS SQL Server')
         ms.open()
         if dev_mode:
+            logging.info('Connection to GP DEV')
             pg_dev.open()
         if ift_mode:
+            logging.info('Connection to GP IFT')
             pg_ift.open()
 
         # Пересылка данных

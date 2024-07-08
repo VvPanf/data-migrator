@@ -13,7 +13,7 @@ class PostgresDao:
         self.conn = None
 
     def open(self):
-        self.conn = pyodbc.connect(**self.config)
+        self.conn = pyodbc.connect(**self.config, timeout=120)
 
     def close(self):
         if self.conn:
