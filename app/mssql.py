@@ -6,7 +6,7 @@ from app.config import load_config
 
 class MsSqlDao:
     def __init__(self, section: str):
-        self.config = load_config('config.ini', section)
+        self.config = load_config(section)
         self.schema = self.config.pop('schema')
         self.conn = None
 

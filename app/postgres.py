@@ -8,7 +8,7 @@ from app.config import load_config
 class PostgresDao:
     def __init__(self, section: str):
         self.mode = section[-3:-1].upper()
-        self.config = load_config('config.ini', section)
+        self.config = load_config(section)
         self.schema = self.config.pop('schema')
         self.conn = None
 

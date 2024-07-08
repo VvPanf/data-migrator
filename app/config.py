@@ -1,8 +1,14 @@
+import os
+import sys
 from configparser import ConfigParser
 
-def load_config(filename: str, section: str) -> dict:
+ROOT_DIR = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
+CONFIG_PATH = os.path.join(ROOT_DIR, 'config.ini')
+
+
+def load_config(section: str) -> dict:
     parser = ConfigParser()
-    parser.read(filename)
+    parser.read(CONFIG_PATH)
     config = {}
     if parser.has_section(section):
         params = parser.items(section)
