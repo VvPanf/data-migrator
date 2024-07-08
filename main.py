@@ -4,7 +4,7 @@ from gui.gui import Gui
 
 
 def main():
-    logging.getLogger().addHandler(logging.StreamHandler())
+    logging.basicConfig(level=logging.DEBUG)
     gui = Gui()
     gui.mainloop()
 
