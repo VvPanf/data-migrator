@@ -8,6 +8,7 @@ class TextHandler(logging.Handler):
         # Initialize the instance of the class
         logging.Handler.__init__(self)
         self.text = text
+        self.formatter = logging.Formatter('[%(levelname)s] %(message)s')
 
     def emit(self, record):
         # Emit a message to the Text widget

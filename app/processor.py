@@ -33,27 +33,28 @@ def start_process(reports: list, dev_mode: bool, ift_mode: bool):
         for report in reports:
             logging.info(f'========== REPORT {report} ==========')
             report_tables = get_tables(f'{report}.txt')
-            for table in report_tables:
-                logging.info(f'-> Start process table {table}')
-                if not ms.check_table_exists(table):
-                    logging.error(f'Table {table} not exists')
+            for table_str in report_tables:
+                ms_table, pg_table = get_table_names(table_str)
+                logging.info(f'-> Start process table {ms_table}')
+                if not ms.check_table_exists(ms_table):
+                    logging.error(f'Table {ms_table} not exists')
                     continue
                 # Create table
-                columns_result = ms.get_table_columns(table)
+                columns_result = ms.get_table_columns(ms_table)
                 columns_with_types = [{'name': row[3], 'type': map_types(row[4], row[5])} for row in columns_result]
                 if dev_mode:
-                    pg_dev.create_table(table, columns_with_types)
+                    pg_dev.create_table(pg_table, columns_with_types)
                 if ift_mode:
-                    pg_ift.create_table(table, columns_with_types)
-                logging.info(f'Table {table} is created')
+                    pg_ift.create_table(pg_table, columns_with_types)
+                logging.info(f'Table {pg_table} is created')
                 # Insert data
                 column_names = [col['name'] for col in columns_with_types]
-                data = ms.select_data(table, column_names)
+                data = ms.select_data(ms_table, column_names)
                 if dev_mode:
-                    pg_dev.insert_data(table, column_names, data)
+                    pg_dev.insert_data(pg_table, column_names, data)
                 if ift_mode:
-                    pg_ift.create_table(table, columns_with_types)
-                logging.info(f'Table {table} is filled')
+                    pg_ift.create_table(pg_table, columns_with_types)
+                logging.info(f'Table {pg_table} is filled')
         logging.info("=== DONE! ===")
     except Exception as err:
         logging.error(err)
@@ -64,6 +65,10 @@ def start_process(reports: list, dev_mode: bool, ift_mode: bool):
             pg_dev.close()
         if ift_mode:
             pg_ift.close()
+
+
+def get_table_names(table_str: str) -> tuple:
+    return (table_str, table_str) if '|' not in table_str else table_str.split('|')
 
 
 def map_types(short_type: str, full_type: str) -> str:
