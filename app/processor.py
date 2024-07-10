@@ -68,7 +68,7 @@ def start_process(reports: list, dev_mode: bool, ift_mode: bool):
 
 
 def get_table_names(table_str: str) -> tuple:
-    return (table_str, table_str) if '|' not in table_str else table_str.split('|')
+    return (table_str, table_str) if '|' not in table_str else tuple(table_str.split('|'))
 
 
 def map_types(short_type: str, full_type: str) -> str:
