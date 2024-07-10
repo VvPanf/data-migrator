@@ -39,5 +39,11 @@ class PostgresDao:
         args_str = '(' + ','.join(['?'] * len(column_names)) + ')'
         query = f'insert into {self.schema}.{table_name} ({columns}) values {args_str}'
         self.log(query)
-        cur.executemany(query, data)
-        self.conn.commit()
+        batch_size = 10000
+        data_size = len(data)
+        for i in range(0, data_size, batch_size):
+            logging.debug(f'Inserted {i} of {data_size}')
+            batch = data[i:i + batch_size]
+            cur.executemany(query, batch)
+            self.conn.commit()
+        logging.debug(f'Inserted {data_size} of {data_size}')
