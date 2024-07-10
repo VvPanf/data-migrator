@@ -74,7 +74,8 @@ def get_table_names(table_str: str) -> tuple:
 def map_types(short_type: str, full_type: str) -> str:
     typedefs = {
         'bit': 'boolean',
-        'datetime': 'timestamp'
+        'datetime': 'timestamp',
+        'tinyint': 'smallint'
     }
     replacement = typedefs.get(short_type)
     if replacement:
